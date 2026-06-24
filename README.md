@@ -8,11 +8,21 @@ Inspired by high-end Chinese beverage advertising (百岁山, 依云), this Clau
 
 ## Quick Start
 
-1. Install this skill into your Claude Code project
-2. Prepare: product PNG (transparent background) + landscape photo matching product origin
-3. Tell Claude: "帮我用 ecom-product-hero 做一张产品海报"
-4. Claude will ask for product image, background, specs, and dimensions
-5. One PNG output, ready for print or e-commerce upload
+**One-line install:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/wuxinpro/ecom-product-hero/main/install.sh | bash
+```
+
+**Manual install:**
+```bash
+git clone --depth 1 https://github.com/wuxinpro/ecom-product-hero.git ~/.claude/skills/ecom-product-hero
+```
+
+**Then:**
+1. Prepare: product PNG (transparent background) + landscape photo matching product origin
+2. Tell Claude: "帮我用 ecom-product-hero 做一张产品海报"
+3. Claude will ask for product image, background, specs, and dimensions
+4. One PNG output, ready for print or e-commerce upload
 
 ## What It Produces
 
