@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>[PRODUCT_NAME] — 产品海报</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{background:#1a1a1a;-webkit-font-smoothing:antialiased;display:flex;justify-content:center;padding:48px}
+    :root{--sans:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif}
+
+    /* === POSTER CANVAS ===
+       Change width/height for your target size.
+       Default: 80×100cm rendered at 1600×2000px (50dpi equivalent for print).
+       Common sizes:
+         80×200cm → 1600×4000px
+         80×100cm → 1600×2000px (default)
+         60×160cm → 1200×3200px
+         50×70cm  → 1000×1400px (wall poster)
+    */
+    .poster{
+      width:1600px;height:2000px;position:relative;overflow:hidden;
+      font-family:var(--sans);color:#fff;
+    }
+
+    /* === BACKGROUND ===
+       Replace with your product's origin landscape.
+       Match the scene to the product story:
+       - Mineral water → mountains, glaciers
+       - Tea/coffee → terraced fields, highlands
+       - Wine → vineyards, valleys
+       - Seafood → ocean, coastline
+       Use object-position to frame the best part of the photo. */
+    .bg-scene{
+      position:absolute;inset:0;z-index:0;
+      background:url('../[YOUR_BACKGROUND].jpg') center 45% / cover no-repeat;
+    }
+
+    /* === ATMOSPHERE OVERLAY ===
+       Creates the "百岁山 effect": dark top/bottom, lit center.
+       Adjust opacity stops for your specific photo:
+       - If photo is already dark: reduce overlay opacity
+       - If photo is bright: increase overlay opacity
+       - The 35-55% zone is where the product sits — keep it lighter */
+    .bg-overlay{
+      position:absolute;inset:0;z-index:1;
+      background:linear-gradient(180deg,
+        rgba(10,20,35,.72) 0%,
+        rgba(12,25,40,.55) 25%,
+        rgba(15,25,40,.25) 42%,
+        rgba(18,28,42,.20) 55%,
+        rgba(18,28,42,.30) 65%,
+        rgba(22,32,46,.50) 80%,
+        rgba(20,30,44,.62) 100%);
+    }
+
+    /* === BLENDING LAYERS ===
+       Three layers to make the product feel part of the scene.
+       Adjust size/position based on your product's placement. */
+
+    /* Warm glow behind product — the "spotlight" */
+    .product-glow{
+      position:absolute;z-index:1;
+      top:44%;left:50%;transform:translate(-50%,-50%);
+      width:1000px;height:1000px;pointer-events:none;
+      background:radial-gradient(ellipse at center,
+        rgba(200,180,140,.18) 0%,
+        rgba(180,160,120,.10) 20%,
+        rgba(140,120,90,.05) 40%,
+        transparent 65%);
+    }
+    /* Subtle light rays from above */
+    .light-rays{
+      position:absolute;z-index:1;inset:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 1000px 700px at 50% 50%,
+          rgba(220,200,160,.06) 0%, transparent 60%),
+        radial-gradient(ellipse 600px 900px at 50% 44%,
+          rgba(255,255,255,.04) 0%, transparent 70%);
+    }
+    /* Ground mist at product base — prevents "floating" look */
+    .ground-mist{
+      position:absolute;z-index:1;
+      bottom:32%;left:8%;right:8%;height:140px;pointer-events:none;
+      background:linear-gradient(180deg,
+        transparent 0%,
+        rgba(200,180,150,.08) 30%,
+        rgba(180,160,140,.12) 60%,
+        rgba(160,140,120,.06) 100%);
+    }
+
+    .content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;}
+
+    /* === TOP SECTION === */
+    .top-section{padding:60px 120px 0;display:flex;flex-direction:column;gap:18px;}
+
+    .main-title{
+      font-size:76px;font-weight:700;line-height:1.15;letter-spacing:.05em;
+      text-shadow:0 4px 24px rgba(0,0,0,.4);
+    }
+    .main-title .gold{color:#d4a853;}
+
+    .sub-lines{font-size:24px;font-weight:400;color:rgba(255,255,255,.78);line-height:1.8;letter-spacing:.04em;}
+
+    /* === MIDDLE: Product + Metric === */
+    .mid-section{
+      flex:1;display:flex;align-items:center;justify-content:center;
+      position:relative;padding:0 80px;
+    }
+
+    .product-wrap{
+      position:relative;display:flex;align-items:center;justify-content:center;
+      height:100%;
+    }
+    .product-wrap img{
+      height:100%;max-height:1100px;object-fit:contain;
+      filter:drop-shadow(0 8px 32px rgba(0,0,0,.25)) drop-shadow(0 0 80px rgba(200,170,120,.15));
+    }
+
+    /* Right-side metric badge — the "hero number" */
+    .metric-badge{
+      position:absolute;right:80px;top:50%;transform:translateY(-50%);
+      display:flex;flex-direction:column;align-items:flex-end;gap:8px;
+    }
+    .metric-value{
+      font-size:96px;font-weight:200;line-height:.95;letter-spacing:-.02em;
+      text-shadow:0 4px 20px rgba(0,0,0,.35);
+    }
+    .metric-value .unit{font-size:42px;font-weight:300;}
+    .metric-label{
+      font-size:30px;font-weight:600;letter-spacing:.08em;
+      color:#d4a853;text-shadow:0 2px 8px rgba(0,0,0,.4);
+    }
+    .metric-sub{
+      font-size:20px;font-weight:400;color:rgba(255,255,255,.65);
+      text-align:right;line-height:1.5;
+    }
+
+    /* === BOTTOM SECTION === */
+    .bottom-section{padding:0 120px 48px;display:flex;flex-direction:column;gap:28px;}
+
+    .bottom-subhead{
+      font-size:26px;font-weight:400;color:rgba(255,255,255,.7);
+      text-align:center;letter-spacing:.05em;line-height:1.6;
+    }
+
+    /* Data matrix — 4-5 columns of key specs */
+    .data-matrix{
+      display:flex;gap:0;
+      background:rgba(0,0,0,.35);
+    }
+    .data-cell{
+      flex:1;text-align:center;padding:28px 16px;
+      display:flex;flex-direction:column;gap:6px;
+      border-right:1px solid rgba(255,255,255,.1);
+    }
+    .data-cell:last-child{border-right:0;}
+    .data-num{
+      font-size:38px;font-weight:200;line-height:1;letter-spacing:-.01em;
+    }
+    .data-num .unit{font-size:20px;font-weight:300;opacity:.7;}
+    .data-name{
+      font-size:20px;font-weight:500;letter-spacing:.05em;
+    }
+    .data-detail{
+      font-size:16px;font-weight:400;opacity:.6;line-height:1.4;
+    }
+
+    .spec-footer{
+      text-align:center;font-size:22px;font-weight:400;color:rgba(255,255,255,.5);
+      letter-spacing:.08em;
+    }
+
+    /* === OPTIONAL: Promo badge (top-right seal) === */
+    .promo-badge{
+      position:absolute;z-index:3;top:56px;right:80px;
+      width:160px;height:160px;pointer-events:none;
+      background:linear-gradient(135deg, #c0392b, #8b1a1a);
+      border-radius:50%;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;
+      box-shadow:0 8px 32px rgba(0,0,0,.35);
+      border:3px solid rgba(212,168,83,.5);
+    }
+    .promo-badge .promo-label{
+      font-size:26px;font-weight:700;color:#d4a853;letter-spacing:.06em;line-height:1.2;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster" id="poster">
+
+    <!-- === BACKGROUND LAYERS === -->
+    <div class="bg-scene"></div>
+    <div class="bg-overlay"></div>
+    <div class="product-glow"></div>
+    <div class="light-rays"></div>
+    <div class="ground-mist"></div>
+
+    <!-- === OPTIONAL: Promo badge === -->
+    <!-- <div class="promo-badge">
+      <div class="promo-label">送礼<br>首选</div>
+    </div> -->
+
+    <div class="content">
+
+      <!-- ====== TOP: Title + subtitle ====== -->
+      <div class="top-section">
+        <div class="main-title">
+          [ORIGIN_STORY_LINE1]<br>[ORIGIN_STORY_LINE2]<span class="gold">[GOLD_KEYWORD]</span>
+        </div>
+        <div class="sub-lines">
+          [SUB_LINE_1]<br>
+          [SUB_LINE_2]
+        </div>
+      </div>
+
+      <!-- ====== MIDDLE: Product image + hero metric ====== -->
+      <div class="mid-section">
+        <div class="product-wrap">
+          <!-- Product image (transparent PNG preferred) -->
+          <img src="../[YOUR_PRODUCT].png" alt="[PRODUCT_NAME]">
+        </div>
+        <div class="metric-badge">
+          <div class="metric-value">[HERO_NUMBER]<span class="unit">[UNIT]</span></div>
+          <div class="metric-label">[METRIC_NAME]</div>
+          <div class="metric-sub">[METRIC_BENEFIT_1]<br>[METRIC_BENEFIT_2]</div>
+        </div>
+      </div>
+
+      <!-- ====== BOTTOM: Tech line + data matrix + footer ====== -->
+      <div class="bottom-section">
+        <div class="bottom-subhead">
+          [TECH_SUMMARY_LINE]
+        </div>
+        <div class="data-matrix">
+          <div class="data-cell">
+            <div class="data-num">[VAL_1]<span class="unit">[U_1]</span></div>
+            <div class="data-name">[NAME_1]</div>
+            <div class="data-detail">[DETAIL_1]</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-num">[VAL_2]<span class="unit">[U_2]</span></div>
+            <div class="data-name">[NAME_2]</div>
+            <div class="data-detail">[DETAIL_2]</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-num">[VAL_3]<span class="unit">[U_3]</span></div>
+            <div class="data-name">[NAME_3]</div>
+            <div class="data-detail">[DETAIL_3]</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-num">[VAL_4]<span class="unit">[U_4]</span></div>
+            <div class="data-name">[NAME_4]</div>
+            <div class="data-detail">[DETAIL_4]</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-num">[VAL_5]<span class="unit">[U_5]</span></div>
+            <div class="data-name">[NAME_5]</div>
+            <div class="data-detail">[DETAIL_5]</div>
+          </div>
+        </div>
+        <div class="spec-footer">
+          [BOTTOM_SPEC_LINE]
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
