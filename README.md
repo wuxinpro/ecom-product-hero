@@ -32,7 +32,9 @@ A single high-resolution poster image suitable for:
 - **Wall posters** for retail display
 - **E-commerce hero images** (淘宝/京东 product main image)
 
-![Example output — 7.7Hz mineral water poster](examples/poster-80x100cm.png)
+![Example — 7.7Hz mineral water poster](https://raw.githubusercontent.com/wuxinpro/ecom-product-hero/main/examples/7.7-water-poster.png)
+
+*80×100cm 易拉宝 — 昆仑山背景 + 瓶身居中 + 右侧指标 + 底部数据矩阵*
 
 ## Visual Style
 
